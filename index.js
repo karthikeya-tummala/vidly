@@ -7,12 +7,15 @@ const app = express();
 app.set('view engine', 'pug');
 
 console.log(`Running on "${app.get('env')}" environment`);
-console.log("started");
 
 if(app.get('env') === 'development'){
     app.use(morgan('tiny'));
     startupDebugger('Morgan enabled...');
 }
+
+app.get('/', (req, res) => {
+   res.render('index', { title: 'My Express App', message: 'Hello world!!!'});
+});
 
 app.get('/api/hello', (req, res) => {
     res.send("Hello World");
