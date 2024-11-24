@@ -10,11 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "debug": "^4.3.7",
     "express": "^4.21.1",
     "joi": "^17.13.3",
-    "mongodb": "^6.10.0",
-    "morgan": "^1.10.0",
-    "pug": "^3.0.3"
+    "mongoose": "^8.8.2"
   }
 }
