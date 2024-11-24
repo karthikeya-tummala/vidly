@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-const Genre = mongoose.model('genre', new mongoose.Schema({
+const Genre = mongoose.model('Genre', new mongoose.Schema({
     name: {
         type: String,
         required: true,

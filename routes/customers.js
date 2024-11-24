@@ -1,3 +1,4 @@
+const { Customer, validate} = require('../models/customer');
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
@@ -35,7 +36,7 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req,res) => {
-    const { error } = validateData(req.body);
+    const { error } = validate(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
     const customer = await Customer.findByIdAndUpdate(req.params.id,
