@@ -34,6 +34,12 @@ router.get('/', async (req, res) => {
     res.send(customers);
 });
 
+router.get('/:id', async (req, res) => {
+    const customers = await Customer.findById(req.params.id);
+    if(!customers) return res.status(404).send('Customer with specified id does not exist.');
+    res.send(customers);
+});
+
 router.post('/', async (req, res) => {
     const { error } = validateData(req.body);
     if(error) {return res.status(400).send(error.details[0].message)}
