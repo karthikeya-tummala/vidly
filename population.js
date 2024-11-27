@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const {Mongoose} = require("mongoose");
 
 mongoose.connect('mongodb://localhost/playground')
     .then(() => console.log('Connected to MongoDB'))
