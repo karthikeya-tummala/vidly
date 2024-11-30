@@ -6,7 +6,6 @@ mongoose.connect('mongodb://localhost/vidly')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.log('Error:', err));
 
-const Genre = mongoose.model()
 
 const Movie = mongoose.model('Movie', new mongoose.Schema({
     title: {
@@ -35,10 +34,15 @@ const Movie = mongoose.model('Movie', new mongoose.Schema({
 }));
 
 function validateMovie(movie){
-    const schema = {
+    const schema = Joi.object({
         title: Joi.string().required().min(3).max(255),
         genreId: Joi.string().required(),
         numberInStock: Joi.number().required().min(0).max(255),
         dailyRentalRate: Joi.number().required().min(0).max(255)
-    }
+    });
+
+    return schema.validate(movie);
 }
+
+module.exports.Movie = Movie;
+module.exports.validate = validateMovie;
