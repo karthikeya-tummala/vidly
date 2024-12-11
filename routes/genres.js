@@ -7,10 +7,6 @@ mongoose.connect('mongodb://localhost/vidly')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.log('Error connecting to MongoDB:', err));
 
-mongoose.connection.on('connected', () => {
-    console.log(`Connected to database ${mongoose.connection.name}`);
-});
-
 router.get('/', async (req, res) => {
     res.send(await Genre.find().sort('name'));
 });

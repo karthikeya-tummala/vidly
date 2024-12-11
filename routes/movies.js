@@ -63,3 +63,5 @@ router.delete('/:id', async(req, res) => {
     if(!movie) return res.status(404).send('Movie not found with given Id');
     res.send(movie);
 });
+
+module.exports = router;
