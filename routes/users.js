@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { validate, User } = require('../models/user');
+const validateId = require('../utils/validateId');
 
 router.get('/', async (req, res) => {
     const users = await User.find().sort();
@@ -9,6 +10,9 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
+    const errorId = validateId(req.params.id);
+    if(errorId) return res.status(400).send('Invalid User ID');
+
     const user = await User.findById(req.params.id);
     if(!user) return res.status(404).send('No user found for the given ID');
     res.send(user);

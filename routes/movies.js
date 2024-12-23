@@ -2,6 +2,7 @@ const express = require('express');
 const { validate, Movie } = require('../models/movie');
 const router = express.Router();
 const { Genre } = require('../models/genre');
+const validateId = require('../utils/validateId');
 
 router.get('/', async (req, res) => {
     const movies = await Movie.find().sort('name');
@@ -9,6 +10,9 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async(req, res) => {
+    const errorId = validateId(req.params.id);
+    if(errorId) return res.status(400).send('Invalid Movie ID');
+
     const movie = await Movie.findById(req.params.id);
     if(!movie) return res.status(404).send('Movie not found with given Id');
     res.send(movie);
@@ -36,6 +40,9 @@ router.post('/', async (req,res) => {
 });
 
 router.put('/:id', async(req, res) => {
+    const errorId = validateId(req.params.id);
+    if(errorId) return res.status(400).send('Invalid Movie ID');
+
     const { error } = validate(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
@@ -59,6 +66,9 @@ router.put('/:id', async(req, res) => {
 });
 
 router.delete('/:id', async(req, res) => {
+    const errorId = validateId(req.params.id);
+    if(errorId) return res.status(400).send('Invalid Movie ID');
+
     const movie = await Movie.findByIdAndDelete(req.params.id);
     if(!movie) return res.status(404).send('Movie not found with given Id');
     res.send(movie);

@@ -2,6 +2,7 @@ const { Customer, validate} = require('../models/customer');
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
+const validateId = require('../utils/validateId');
 
 mongoose.connect('mongodb://localhost/vidly')
     .catch(err => console.log('Error:', err));
@@ -16,6 +17,9 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
+    const errorId = validateId(req.params.id);
+    if(errorId) return res.status(400).send('Invalid customer ID');
+
     const customers = await Customer.findById(req.params.id);
     if(!customers) return res.status(404).send('Customer with specified id does not exist.');
     res.send(customers);
@@ -36,6 +40,9 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req,res) => {
+    let errorId = validateId(req.params);
+    if(errorId) return res.status(400).send('Invalid customer ID');
+
     const { error } = validate(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
@@ -53,6 +60,9 @@ router.put('/:id', async (req,res) => {
 });
 
 router.delete('/:id', async (req,res) => {
+    let errorId = validateId(req.params);
+    if(errorId) return res.status(400).send('Invalid customer ID');
+
     const customer = await Customer.findByIdAndDelete(req.params.id);
     if(!customer) return res.status(404).send('Customer with specified id does not exist');
     res.send(customer);

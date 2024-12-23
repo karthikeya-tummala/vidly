@@ -4,6 +4,7 @@ const { Rental, validate } = require('../models/rental');
 const { Movie } = require('../models/movie');
 const { Customer } = require('../models/customer');
 const router = express.Router();
+const validateId = require('../utils/validateId');
 
 router.get('/', async (req, res) => {
     const rentals = await Rental.find().sort('-dateOut');
@@ -51,6 +52,9 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
+    const errorId = validateId(req.params.id);
+    if(errorId) return res.status(400).send('Invalid Rental ID');
+
     const rental = await Rental.findById(req.params.id);
 
     if (!rental) return res.status(404).send('The rental with the given ID was not found.');
