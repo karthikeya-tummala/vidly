@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const _ = require('lodash');
 const { validate, User } = require('../models/user');
 const validateId = require('../utils/validateId');
 
@@ -25,14 +26,19 @@ router.post('/', async (req, res) => {
     let user = await User.findOne({email: req.body.email});
     if(user) return res.status(400).send('User with email already exists');
 
-    user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-    });
-
+    user = new User(_.pick(req.body, ['name', 'email', 'password']));
     await user.save();
-    res.send(user);
+    res.send(_.pick(user, ['name', 'email']));
+});
+
+router.delete('/:id', async (req, res) => {
+    const errorId = validateId(req.params.id);
+    if(errorId) return res.status(400).send('Invalid User ID');
+
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if(!deletedUser) return res.status(404).send('No user with given ID is found');
+
+    res.send(_.pick(deletedUser, ['name', 'email']));
 });
 
 module.exports = router;
