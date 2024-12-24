@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const { validate, User } = require('../models/user');
 const validateId = require('../utils/validateId');
 
@@ -18,7 +20,8 @@ router.post('/', async (req, res) => {
     user.password = hashedPassword;
     await user.save();
 
-    res.send(_.pick(user, ['_id', 'name', 'email']));
+    const token = user.generateAuthToken();
+    res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 });
 
 router.delete('/:id', async (req, res) => {
