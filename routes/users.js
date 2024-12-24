@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
+const argon2 = require('argon2');
 const { validate, User } = require('../models/user');
 const validateId = require('../utils/validateId');
 
@@ -26,9 +27,13 @@ router.post('/', async (req, res) => {
     let user = await User.findOne({email: req.body.email});
     if(user) return res.status(400).send('User with email already exists');
 
-    user = new User(_.pick(req.body, ['name', 'email', 'password']));
+    const hashedPassword = await argon2.hash(req.body.password, {type: argon2.argon2id});
+
+    user = new User(_.pick(req.body, ['name', 'email']));
+    user.password = hashedPassword;
     await user.save();
-    res.send(_.pick(user, ['name', 'email']));
+
+    res.send(_.pick(user, ['_id', 'name', 'email']));
 });
 
 router.delete('/:id', async (req, res) => {
@@ -38,7 +43,7 @@ router.delete('/:id', async (req, res) => {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
     if(!deletedUser) return res.status(404).send('No user with given ID is found');
 
-    res.send(_.pick(deletedUser, ['name', 'email']));
+    res.send(_.pick(deletedUser, ['_id', 'name', 'email']));
 });
 
 module.exports = router;
