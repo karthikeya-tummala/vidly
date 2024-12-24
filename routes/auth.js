@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const argon2 = require('argon2');
 const Joi = require('joi');
+const jwt = require('jsonwebtoken');
 const { User } = require('../models/user');
 
 router.post('/', async (req, res) => {
@@ -15,7 +16,8 @@ router.post('/', async (req, res) => {
         const isMatch = await argon2.verify(user.password, req.body.password);
         if(!isMatch) return res.status(400).send('Invalid email or password');
 
-        res.send(true);
+        const token = jwt.sign({_id: user._id}, 'testSecretKey');
+        res.send(token);
 
     } catch (err) {
         console.error('Error verifying password:', err);
