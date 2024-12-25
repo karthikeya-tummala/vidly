@@ -2,6 +2,7 @@ const {validate, Genre} = require('../models/genre');
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const auth = require('../middleware/auth');
 const validateId = require('../utils/validateId');
 
 mongoose.connect('mongodb://localhost/vidly')
@@ -21,7 +22,7 @@ router.get('/:id', async (req, res) => {
     res.send(genre);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -30,7 +31,7 @@ router.post('/', async (req, res) => {
     res.send(genre);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     let errorId = validateId(req.params.id);
     if(errorId) return res.status(400).send('Invalid Genre ID');
 
@@ -43,7 +44,7 @@ router.put('/:id', async (req, res) => {
     res.send(genre);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     const errorId = validateId(req.params.id);
     if(errorId) return res.status(400).send('Invalid Genre ID');
 

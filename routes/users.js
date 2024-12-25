@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const argon2 = require('argon2');
+const auth = require('../middleware/auth');
 const { validate, User } = require('../models/user');
 const validateId = require('../utils/validateId');
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const { error } = validate(req.body);
     if(error) return res.status(400).send(error.detail[0].message);
 
@@ -22,7 +23,7 @@ router.post('/', async (req, res) => {
     res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     const errorId = validateId(req.params.id);
     if(errorId) return res.status(400).send('Invalid User ID');
 
