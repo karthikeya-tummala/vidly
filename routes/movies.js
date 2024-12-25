@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
 const { validate, Movie } = require('../models/movie');
 const { Genre } = require('../models/genre');
 const validateId = require('../utils/validateId');
@@ -19,7 +18,7 @@ router.get('/:id', async(req, res) => {
     res.send(movie);
 });
 
-router.post('/', auth, async (req,res) => {
+router.post('/', async (req,res) => {
     const { error } = validate(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
@@ -40,7 +39,7 @@ router.post('/', auth, async (req,res) => {
     res.send(movie);
 });
 
-router.put('/:id', auth, async(req, res) => {
+router.put('/:id', async(req, res) => {
     const errorId = validateId(req.params.id);
     if(errorId) return res.status(400).send('Invalid Movie ID');
 
@@ -66,7 +65,7 @@ router.put('/:id', auth, async(req, res) => {
     res.send(movie);
 });
 
-router.delete('/:id', auth, async(req, res) => {
+router.delete('/:id', async(req, res) => {
     const errorId = validateId(req.params.id);
     if(errorId) return res.status(400).send('Invalid Movie ID');
 
