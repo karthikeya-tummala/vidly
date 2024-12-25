@@ -6,6 +6,12 @@ const auth = require('../middleware/auth');
 const { validate, User } = require('../models/user');
 const validateId = require('../utils/validateId');
 
+router.get('/me', auth, async (req, res) => {
+    const user = await User.findById(req.user._id).select('-password');
+    if(!user) return res.status(404).send('User records not found');
+    res.send(user);
+})
+
 router.post('/', auth, async (req, res) => {
     const { error } = validate(req.body);
     if(error) return res.status(400).send(error.detail[0].message);
