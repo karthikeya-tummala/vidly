@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const argon2 = require('argon2');
-const jwt = require('jsonwebtoken');
-const config = require('config');
 const { validate, User } = require('../models/user');
 const validateId = require('../utils/validateId');
 
