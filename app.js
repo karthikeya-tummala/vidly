@@ -1,5 +1,7 @@
+require('express-async-errors');
 const express = require('express');
 const app = express();
+const error = require('/middleware/error');
 const genres = require('./routes/genres');
 const home = require('./routes/home');
 const customers = require('./routes/customers');
@@ -15,7 +17,6 @@ if(!config.get('jwtPrivateKey')){
 }
 
 app.use(express.json());
-
 app.use('/', home);
 app.use('/api/genres', genres);
 app.use('/api/customers', customers);
@@ -23,6 +24,7 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => { console.log(`Listening of port ${port}!!!`) });
