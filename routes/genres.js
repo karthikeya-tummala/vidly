@@ -29,7 +29,7 @@ router.post('/', auth, asyncMiddleware (async(req, res) => {
     res.send(genre);
 }));
 
-router.put('/:id', auth, asyncMiddleware(async (req, res) => {
+router.put('/:id', [auth, admin], asyncMiddleware(async (req, res) => {
     let errorId = validateId(req.params.id);
     if(errorId) return res.status(400).send('Invalid Genre ID');
 
