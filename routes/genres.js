@@ -1,17 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const {validate, Genre} = require('../models/genre');
 const validateId = require('../utils/validateId');
 
-mongoose.connect('mongodb://localhost/vidly')
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.log('Error connecting to MongoDB:', err));
-
 router.get('/', async (req, res) => {
-    res.send(await Genre.find().sort('name'));
+    const genres = await Genre.find().sort('name');
+    res.send(genres);
 });
 
 router.get('/:id', async (req, res) => {
