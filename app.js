@@ -1,6 +1,5 @@
 require('express-async-errors');
-const express = require('express');
-const app = express();
+const winston = require('winston');
 const error = require('./middleware/error');
 const genres = require('./routes/genres');
 const home = require('./routes/home');
@@ -10,6 +9,15 @@ const rentals = require('./routes/rentals');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 const config = require('config');
+const express = require('express');
+const app = express();
+
+winston.handleExceptions(
+    new winston.transports.File({filename: 'unhandledExceptions.log'}));
+
+process.on('unhandledRejection', (ex) => {
+    throw ex;
+});
 
 if(!config.get('jwtPrivateKey')){
     console.log('FATAL ERROR: jwtPrivateKey is not defined.');
