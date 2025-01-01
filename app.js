@@ -11,6 +11,7 @@ const users = require('./routes/users');
 const auth = require('./routes/auth');
 const config = require('config');
 const express = require('express');
+const mongoose = require("mongoose");
 const app = express();
 
 winston.handleExceptions(
@@ -30,6 +31,13 @@ if(!config.get('jwtPrivateKey')){
     console.log('FATAL ERROR: jwtPrivateKey is not defined.');
     process.exit(1);
 }
+
+mongoose.connect('mongodb://localhost/vidly')
+    .catch(err => console.log('Error:', err));
+
+mongoose.connection.on('connected', () => {
+    console.log(`Connected to Database ${mongoose.connection.name}`);
+});
 
 app.use(express.json());
 app.use('/', home);

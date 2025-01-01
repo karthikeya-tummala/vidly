@@ -4,13 +4,6 @@ const mongoose = require('mongoose');
 const { Customer, validate } = require('../models/customer');
 const validateId = require('../utils/validateId');
 
-mongoose.connect('mongodb://localhost/vidly')
-    .catch(err => console.log('Error:', err));
-
-mongoose.connection.on('connected', () => {
-    console.log(`Connected to Database ${mongoose.connection.name}`);
-});
-
 router.get('/', async (req, res) => {
     const customers = await Customer.find().sort('name');
     res.send(customers);
